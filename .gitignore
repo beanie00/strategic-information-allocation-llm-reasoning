@@ -1,0 +1,28 @@
+nohup.out
+train/wandb/
+
+__pycache__/
+*.pyc
+
+# Large data / model files
+*.ckpt
+*.pt
+*.pth
+*.h5
+*.onnx
+*.zip
+*.tar
+*.tar.gz
+*.csv
+*.parquet
+*.npz
+*.json
+# *.jsonl
+
+eval/completions/
+eval/flash_attn-2.8.1+cu12torch2.8cxx11abiFALSE-cp312-cp312-linux_x86_64.whl
+eval/transformers/
+eval/avg_outputs/
+eval/vllm/
+eval/core
+train/src/llamafactory.egg-info/

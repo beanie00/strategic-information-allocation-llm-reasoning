@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 MI Visualization: (1) Line plot (2) Word-shading HTML
 """

@@ -1,9 +1,12 @@
-#!/usr/bin/env python
 """
 Compute MI for the first N tokens across multiple samples.
 CSV streaming save version (every 500 tokens).
 Includes option to combine solution + answer for GT representation.
 """
+
+# Adapted from:
+#   https://github.com/ChnQ/MI-Peaks/blob/master/src/generate_activation.py
+#   https://github.com/ChnQ/MI-Peaks/blob/master/src/cal_mi.py
 
 import torch
 import json

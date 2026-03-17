@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# Adapted from: https://github.com/ChnQ/MI-Peaks/blob/master/src/mi_estimators.py
 
 import torch
 import numpy as np
@@ -37,7 +37,7 @@ def kernelmat(X, sigma, ktype='gaussian'):
     """
     if len(X.shape) == 1:
         X = X.view(-1, 1)
-    
+
     m = int(X.size()[0])
     H = torch.eye(m) - (1. / m) * torch.ones([m, m])
 
@@ -76,7 +76,7 @@ def hsic_normalized_cca(x, y, sigma=50., ktype='gaussian'):
         y = y.reshape(-1, 1)
     # x = torch.from_numpy(x)
     # y = torch.from_numpy(y)
-    
+
     m = int(x.size()[0])
     Kxc = kernelmat(x, sigma=sigma, ktype=ktype)
     Kyc = kernelmat(y, sigma=sigma, ktype=ktype)

@@ -4,7 +4,12 @@
 
 This repository contains the analysis code for the paper **"Understanding Reasoning in LLMs through Strategic Information Allocation under Uncertainty"** ([arXiv:2603.15500](https://arxiv.org/abs/2603.15500)).
 
-Much of our codebase builds upon **LIMO: Less Is More for Reasoning** ([paper](https://arxiv.org/pdf/2502.03387), [code](https://github.com/GAIR-NLP/LIMO)), which in turn uses [LLaMA-Factory](https://github.com/hiyouga/LlamaFactory) for training. We thank both teams for open-sourcing their work. For installation and environment setup, please refer to the [LLaMA-Factory repository](https://github.com/hiyouga/LlamaFactory).
+Much of our codebase builds upon **LIMO: Less Is More for Reasoning** ([paper](https://arxiv.org/pdf/2502.03387), [code](https://github.com/GAIR-NLP/LIMO)), which in turn uses [LLaMA-Factory](https://github.com/hiyouga/LlamaFactory) for training. For installation and environment setup, please refer to the [LLaMA-Factory repository](https://github.com/hiyouga/LlamaFactory).
+
+For MI Peak experiments, our implementation is based on **"Demystifying Reasoning Dynamics with Mutual Information: Thinking Tokens are Information Peaks in LLM Reasoning"** ([paper](https://arxiv.org/abs/2506.02867), [code](https://github.com/ChnQ/MI-Peaks)).
+
+We thank all teams for open-sourcing their work.
+
 
 ## Repository Structure
 

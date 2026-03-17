@@ -16,7 +16,6 @@ from utils.data_loader import load_data
 from utils.math_normalization import *
 from utils.grader import *
 import pickle
-from math import comb
 
 
 def parse_list(arg):
@@ -32,7 +31,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name_or_path', type=str, default="./", help="model dir")
     parser.add_argument('--n_sampling', type=int, default=1, help="n for sampling")
-    parser.add_argument("--k", type=int, default=1, help="Value of k for pass@k calculation")
+    # NOTE: No --k flag here. This script always evaluates with k = n_sampling,
+    # i.e., pass@n (any correct among all n samples = pass).
     parser.add_argument("--data_dir", default="./data", type=str)
     parser.add_argument('--data_name', type=str, default="math", help='identify how to extract answer')
     parser.add_argument("--split", default="test", type=str)
@@ -211,8 +211,15 @@ def infer(args):
     print("llm generate done")
     print(len(file_outputs))
 
-    # Evaluate correctness and compute per-sample average accuracy
-    acc_at_n_list = []
+    # Evaluate correctness
+    #
+    # Metrics computed:
+    #   - Pass@n: 1 if any of the n samples is correct, else 0 (equivalent to pass@k where k=n).
+    #   - Avg@n: per-question accuracy averaged over n samples (= c/n, essentially a
+    #     Monte Carlo estimate of pass@1, with more samples giving a more stable estimate).
+    #     This is NOT a standard named metric; it does not change what is being measured as
+    #     n grows, only the estimation variance.
+    avg_at_n_list = []
 
     for i in tqdm(range(len(examples)), "check correct..."):
         d = examples[i]
@@ -220,8 +227,9 @@ def infer(args):
         generated_responses = file_outputs[i]['generated_responses']
         generated_answers = [extract_answer(resp, args.data_name) for resp in generated_responses]
         is_correct_list = [check_is_correct(ans, gt_ans) for ans in generated_answers]
-        is_correct = any(is_correct_list)
 
+        # Pass@n: any correct among all n samples
+        is_correct = any(is_correct_list)
         if is_correct:
             correct_cnt += 1
 
@@ -234,10 +242,11 @@ def infer(args):
         lengths = file_outputs[i]['response_token_lengths']
         file_outputs[i]['avg_response_token_length'] = sum(lengths) / len(lengths)
 
+        # Avg@n: fraction of correct samples per question
         if len(is_correct_list) > 1:
-            acc_at_n = sum(is_correct_list) / len(is_correct_list)
-            acc_at_n_list.append(acc_at_n)
-            file_outputs[i]['acc_at_n'] = acc_at_n
+            avg_at_n = sum(is_correct_list) / len(is_correct_list)
+            avg_at_n_list.append(avg_at_n)
+            file_outputs[i]['avg_at_n'] = avg_at_n
 
     # Write results to jsonl
     temp_out_file = out_file + ".tmp"
@@ -258,11 +267,11 @@ def infer(args):
     print(f"Pass@{n}: {correct_cnt}/{len(examples)} = {correct_cnt / len(examples):.4f}")
     print(f"Average Response Length (tokens): {avg_response_length:.2f}")
 
-    if acc_at_n_list:
-        overall_acc_at_n = sum(acc_at_n_list) / len(acc_at_n_list)
-        print(f"Acc@{n}: {overall_acc_at_n:.4f}")
+    if avg_at_n_list:
+        overall_avg_at_n = sum(avg_at_n_list) / len(avg_at_n_list)
+        print(f"Avg@{n}: {overall_avg_at_n:.4f}")
     else:
-        print(f"Acc@1: {correct_cnt / len(examples):.4f}")
+        print(f"Avg@1: {correct_cnt / len(examples):.4f}")
 
 
 if __name__ == "__main__":

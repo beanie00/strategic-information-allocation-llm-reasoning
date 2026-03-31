@@ -1,11 +1,10 @@
 # common
 vllm==0.11.0
+transformers==4.57.1
 tqdm
 datasets
 torch
-transformers
 python_dateutil
-pip install --no-build-isolation flash_attn
 
 # math_eval
 sympy
